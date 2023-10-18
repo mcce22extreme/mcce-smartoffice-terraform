@@ -42,7 +42,7 @@ az ad sp create-for-rbac \
 az ad sp create-for-rbac -n sp-smartoffice --role contributor --role rg-temp-aruv --scopes "/subscriptions/$subscriptionId"
 
 # Create service principal
-service_principal=$(az ad sp create-for-rbac -n sp-smartoffice-githubdeploy --role contributor --scope "/subscriptions/$subscriptionId" --query '{appId:appId, tenant:tenant, secret:password}' -o tsv)
+service_principal=$(az ad sp create-for-rbac -n sp-smartoffice-githubdeploy --role contributor --scope "/subscriptions/$subscriptionId" --json-auth --query '{appId:appId, tenant:tenant, secret:password}' -o tsv)
 
 
 
