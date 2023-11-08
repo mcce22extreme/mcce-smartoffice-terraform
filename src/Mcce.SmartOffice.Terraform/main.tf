@@ -9,6 +9,9 @@ terraform {
   }
   backend azurerm {
     key                  = "smartoffice.tfstate"
+    resource_group_name  = "rg-smartoffice-common"
+    storage_account_name = "smartofficetfstate"
+    container_name       = "tfstate"
   }
 }
 

@@ -12,3 +12,4 @@ resource "azurerm_storage_share" "userimage-share" {
   quota                = 5
   depends_on           = [azurerm_storage_account.storage]
 }
+
