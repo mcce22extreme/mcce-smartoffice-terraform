@@ -2,7 +2,7 @@ resource "azurerm_app_configuration" "appconfig" {
     name                            = "cfg-smartoffice-${random_string.name-prefix.result}"
     resource_group_name             = azurerm_resource_group.resourcegroup.name
     location                        = azurerm_resource_group.resourcegroup.location
-    sku                             = "free"
+    sku                             = "standard"
     purge_protection_enabled        = false
 }
 
@@ -28,18 +28,11 @@ resource "azurerm_app_configuration_key" "appconfig-connectionstring" {
   vault_key_reference    = azurerm_key_vault_secret.dbconfig-connectionstring.versionless_id
 }
 
-resource "azurerm_app_configuration_key" "appconfig-databasename" {
-  configuration_store_id = azurerm_app_configuration.appconfig.id
-  depends_on             = [azurerm_role_assignment.appconfig-dataowner]
-  key                    = "dbconfig:databasename"
-  value                  = var.smartoffice_databasename
-}
-
 resource "azurerm_app_configuration_key" "appconfig-databasetype" {
   configuration_store_id = azurerm_app_configuration.appconfig.id
   depends_on             = [azurerm_role_assignment.appconfig-dataowner]
   key                    = "dbconfig:databasetype"
-  value                  = var.smartoffice_databasetype
+  value                  = var.smartoffice_dbtype
 }
 
 resource "azurerm_app_configuration_key" "appconfig-frontendUrl" {
@@ -53,7 +46,7 @@ resource "azurerm_app_configuration_key" "appconfig-mqtt-hostname" {
   configuration_store_id = azurerm_app_configuration.appconfig.id
   depends_on             = [azurerm_role_assignment.appconfig-dataowner]
   key                    = "mqttconfig:hostname"
-  value                  = var.smartoffice_mqtt_hostname
+  value                  = "${var.smartoffice_mqtt_dns_prefix}.${var.azure_location}.cloudapp.azure.com"
 }
 
 resource "azurerm_app_configuration_key" "appconfig-mqtt-port" {

@@ -5,10 +5,17 @@ variable "azure_location" {
 
 variable "azure_resourcegroup" {
   type        = string
+  default     = "rg-smartoffice"
 }
 
-variable "smartoffice_mqtt_hostname" {
+variable "smartoffice_aks_dns_prefix" {
   type        = string
+  default     = "smartoffice-mcce22extreme"
+}
+
+variable "smartoffice_mqtt_dns_prefix" {
+  type        = string
+  default     = "mqtt-mcce22extreme"
 }
 
 variable "smartoffice_mqtt_port" {
@@ -18,25 +25,33 @@ variable "smartoffice_mqtt_port" {
 
 variable "smartoffice_mqtt_username" {
   type        = string
-  default     = "iot"
 }
 
 variable "smartoffice_mqtt_password" {
   type        = string
 }
 
-variable "smartoffice_databasename" {
+variable "smartoffice_dbadmin_username" {
   type        = string
-  default     = "Smartoffice"
 }
 
-variable "smartoffice_databasetype" {
+variable "smartoffice_dbadmin_password" {
   type        = string
-  default     = "CosmosDb"
+}
+
+variable "smartoffice_dbname" {
+  type        = string
+  default     = "smartoffice"
+}
+
+variable "smartoffice_dbtype" {
+  type        = string
+  default     = "SqlServer"
 }
 
 variable "smartoffice_authurl" {
   type        = string
+  default     = "https://keycloak.gruber.info:8943/realms/smartoffice"
 }
 
 variable "smartoffice_authclientid" {

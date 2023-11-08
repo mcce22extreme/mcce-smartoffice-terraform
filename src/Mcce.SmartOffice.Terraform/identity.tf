@@ -1,4 +1,4 @@
-# managed identity
+#Managed identity
 resource "azurerm_user_assigned_identity" "identity" {
   location            = azurerm_resource_group.resourcegroup.location
   name                = "id-smartoffice-${random_string.name-prefix.result}"

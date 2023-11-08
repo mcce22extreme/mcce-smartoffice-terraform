@@ -4,7 +4,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     resource_group_name           = azurerm_resource_group.resourcegroup.name
     depends_on                    = [azurerm_user_assigned_identity.identity, azurerm_role_assignment.aks-identity-role]
     node_resource_group           = "${azurerm_resource_group.resourcegroup.name}-infra"
-    dns_prefix                    = "smartoffice-mcce22extreme"
+    dns_prefix                    = var.smartoffice_aks_dns_prefix
     sku_tier                      = "Free"    
     default_node_pool {
         name                      = "default"
