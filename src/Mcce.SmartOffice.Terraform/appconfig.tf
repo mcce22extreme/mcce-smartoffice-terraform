@@ -46,7 +46,7 @@ resource "azurerm_app_configuration_key" "appconfig-frontendUrl" {
   configuration_store_id = azurerm_app_configuration.appconfig.id
   depends_on             = [azurerm_role_assignment.appconfig-dataowner, azurerm_kubernetes_cluster.aks]
   key                    = "frontendurl"
-  value                  = "http://${azurerm_kubernetes_cluster.aks.dns_prefix}.${var.azure_location}.cloudapp.azure.com/userimage"
+  value                  = "http://${azurerm_kubernetes_cluster.aks.dns_prefix}.${var.azure_location}.cloudapp.azure.com"
 }
 
 resource "azurerm_app_configuration_key" "appconfig-mqtt-hostname" {
