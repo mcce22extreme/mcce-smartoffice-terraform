@@ -2,7 +2,7 @@ resource "azurerm_app_configuration" "appconfig" {
     name                            = "cfg-smartoffice-${random_string.name-prefix.result}"
     resource_group_name             = azurerm_resource_group.resourcegroup.name
     location                        = azurerm_resource_group.resourcegroup.location
-    sku                             = "standard"
+    sku                             = "free"
     purge_protection_enabled        = false
 }
 
@@ -32,14 +32,14 @@ resource "azurerm_app_configuration_key" "appconfig-databasetype" {
   configuration_store_id = azurerm_app_configuration.appconfig.id
   depends_on             = [azurerm_role_assignment.appconfig-dataowner]
   key                    = "dbconfig:databasetype"
-  value                  = var.smartoffice_dbtype
+  value                  = "SqlServer"
 }
 
 resource "azurerm_app_configuration_key" "appconfig-frontendUrl" {
   configuration_store_id = azurerm_app_configuration.appconfig.id
   depends_on             = [azurerm_role_assignment.appconfig-dataowner, azurerm_kubernetes_cluster.aks]
   key                    = "frontendurl"
-  value                  = "http://${azurerm_kubernetes_cluster.aks.dns_prefix}.${var.azure_location}.cloudapp.azure.com"
+  value                  = "https://${azurerm_kubernetes_cluster.aks.dns_prefix}.${var.azure_location}.cloudapp.azure.com"
 }
 
 resource "azurerm_app_configuration_key" "appconfig-mqtt-hostname" {
