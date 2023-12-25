@@ -19,7 +19,7 @@ resource "azurerm_key_vault_secret" "mqttconfig-password" {
 
 resource "azurerm_key_vault_secret" "dbconfig-connectionstring" {
   name          = "connectionstring"
-  value         = "Server=tcp:${azurerm_mssql_server.sqlserver.fully_qualified_domain_name},1433;Initial Catalog=${var.smartoffice_dbname};Persist Security Info=False;User ID=${azurerm_mssql_server.sqlserver.administrator_login};Password=${azurerm_mssql_server.sqlserver.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+  value         = "Server=tcp:${azurerm_mssql_server.sqlserver.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.sqlserver.administrator_login};Password=${azurerm_mssql_server.sqlserver.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   key_vault_id  = azurerm_key_vault.kv.id
   depends_on    = [azurerm_mssql_server.sqlserver, azurerm_role_assignment.kv-admin-role]
 }
