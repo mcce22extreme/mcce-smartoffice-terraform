@@ -1,0 +1,57 @@
+name: "CI/CD Pipeline"
+
+on: push
+
+env:
+  TF_LOG: INFO
+  ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./src/Mcce.SmartOffice.Terraform/
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: terraform init
+        id: init
+        run: terraform init -backend-config="resource_group_name=${{ vars.AZURE_TFSTATE_RESOURCEGROUP }}" -backend-config="storage_account_name=${{ vars.AZURE_TFSTATE_STORAGEACCOUNT }}" -backend-config="container_name=${{ vars.AZURE_TFSTATE_CONTAINER }}"
+
+      - name: terraform validate
+        id: validate
+        run: terraform validate -no-color
+
+  deploy:
+    name: deploy
+    needs: validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./src/Mcce.SmartOffice.Terraform/
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: terraform init
+        id: init
+        run: terraform init -backend-config="resource_group_name=${{ vars.AZURE_TFSTATE_RESOURCEGROUP }}" -backend-config="storage_account_name=${{ vars.AZURE_TFSTATE_STORAGEACCOUNT }}" -backend-config="container_name=${{ vars.AZURE_TFSTATE_CONTAINER }}"
+
+      - name: terraform plan
+        id: plan
+        run: terraform plan -no-color -var "azure_location=${{ vars.AZURE_LOCATION }}" -var "azure_resourcegroup=${{ vars.AZURE_RESOURCEGROUP }}" -var "smartoffice_mqtt_port=${{ vars.SMARTOFFICE_MQTT_PORT }}" -var "smartoffice_mqtt_username=${{ vars.SMARTOFFICE_MQTT_USERNAME }}" -var "smartoffice_mqtt_password=${{ secrets.SMARTOFFICE_MQTT_PASSWORD }}" -var "smartoffice_authurl=${{ vars.SMARTOFFICE_AUTHURL }}" -var "smartoffice_authclientid=${{ vars.SMARTOFFICE_AUTHCLIENTID}}" -var "smartoffice_dbadmin_username=${{ vars.SMARTOFFICE_DBADMIN_USERNAME }}" -var "smartoffice_dbadmin_password=${{ secrets.SMARTOFFICE_DBADMIN_PASSWORD }}"
+        continue-on-error: false
+
+      - name: terraform apply
+        id: apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve -input=false -no-color -var "azure_location=${{ vars.AZURE_LOCATION }}" -var "azure_resourcegroup=${{ vars.AZURE_RESOURCEGROUP }}" -var "smartoffice_mqtt_port=${{ vars.SMARTOFFICE_MQTT_PORT }}" -var "smartoffice_mqtt_username=${{ vars.SMARTOFFICE_MQTT_USERNAME }}" -var "smartoffice_mqtt_password=${{ secrets.SMARTOFFICE_MQTT_PASSWORD }}" -var "smartoffice_authurl=${{ vars.SMARTOFFICE_AUTHURL }}" -var "smartoffice_authclientid=${{ vars.SMARTOFFICE_AUTHCLIENTID}}" -var "smartoffice_dbadmin_username=${{ vars.SMARTOFFICE_DBADMIN_USERNAME }}" -var "smartoffice_dbadmin_password=${{ secrets.SMARTOFFICE_DBADMIN_PASSWORD }}"
+        continue-on-error: false
