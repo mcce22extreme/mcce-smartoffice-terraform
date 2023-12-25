@@ -51,12 +51,17 @@ The centerpiece of the Smart Office infrastructure is the Azure Kubernetes clust
 
 ## Deployment via CI/CD
 
-The deployment of the infrastructure required by the Smart Office backend is carried out via fully automated continuous integration and continuous deployment pipelines. The following set of rules is used:
+The deployment of the infrastructure required by the Smart Office backend is carried out via fully automated continuous integration and continuous deployment pipelines. The following graphic illustrates the basic flow of this pipeline:
 
-### Continiouse Integration
-The Terraform files are validated as part of the Continiouse Integration Pipeline. This check is carried out for every change for every branch of the Git repository.
+<p align="center">
+  <img src="./images/ci_cd_pipeline.png">  
+</p>
 
-### Continiouse Deplyoment 
-In the Continiouse Deplyoment Pipeline, the changes are applied to the configured Azure subscription. This takes place immediately after the changes are transferred to the main branch of the Git repository.
+### Continuous Integration
+The Terraform files are validated as part of the continuous integration step of the pipeline. In addition, a ```terraform plan``` is performed to check whether the changes made can be applied.
+These two steps are carried out for every change that is made to the repository.
+
+### Continuous deployment
+In the continuous deployment step, the changes are actually applied by performing a ```terraform apply```. This step is only executed if changes have been merged to the main branch.
 
 
