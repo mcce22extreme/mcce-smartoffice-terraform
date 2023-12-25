@@ -24,11 +24,12 @@ variable "smartoffice_mqtt_port" {
 }
 
 variable "smartoffice_mqtt_username" {
-  type        = string
+  type        = string  
 }
 
 variable "smartoffice_mqtt_password" {
   type        = string
+  sensitive   = true
 }
 
 variable "smartoffice_dbadmin_username" {
@@ -37,16 +38,7 @@ variable "smartoffice_dbadmin_username" {
 
 variable "smartoffice_dbadmin_password" {
   type        = string
-}
-
-variable "smartoffice_dbname" {
-  type        = string
-  default     = "smartoffice"
-}
-
-variable "smartoffice_dbtype" {
-  type        = string
-  default     = "SqlServer"
+  sensitive   = true
 }
 
 variable "smartoffice_authurl" {
