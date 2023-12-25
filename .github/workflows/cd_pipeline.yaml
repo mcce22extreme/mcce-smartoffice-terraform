@@ -1,8 +1,9 @@
 name: "CD Pipeline"
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 env:
   # verbosity setting for Terraform logs
